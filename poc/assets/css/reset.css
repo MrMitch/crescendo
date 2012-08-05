@@ -1,0 +1,23 @@
+.crescendo-player {
+  line-height: 1;
+}
+.crescendo-player div, .crescendo-player span, .crescendo-player object, .crescendo-player h1, .crescendo-player h2, .crescendo-player h3, .crescendo-player h4, .crescendo-player h5, .crescendo-player h6, .crescendo-player p, .crescendo-player a, .crescendo-player img, .crescendo-player ol, .crescendo-player ul, .crescendo-player li, .crescendo-player embed, .crescendo-player audio {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  text-decoration: none;
+  text-shadow: none;
+}
+.crescendo-player ol, .crescendo-player ul {
+  list-style: none;
+}
+.crescendo-player ol li, .crescendo-player ul li {
+  list-style: none;
+}
+.crescendo-player a img {
+  border: none;
+}

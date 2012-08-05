@@ -1,57 +1,26 @@
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+@import "http://fonts.googleapis.com/css?family=Ubuntu:300";
+.crescendo-player {
+  line-height: 1;
+}
+.crescendo-player div, .crescendo-player span, .crescendo-player object, .crescendo-player h1, .crescendo-player h2, .crescendo-player h3, .crescendo-player h4, .crescendo-player h5, .crescendo-player h6, .crescendo-player p, .crescendo-player a, .crescendo-player img, .crescendo-player ol, .crescendo-player ul, .crescendo-player li, .crescendo-player embed, .crescendo-player audio {
+  font-weight: normal;
   margin: 0;
   padding: 0;
   border: 0;
   font: inherit;
   font-size: 100%;
   vertical-align: baseline;
+  text-decoration: none;
+  text-shadow: none;
 }
-
-html {
-  line-height: 1;
-}
-
-ol, ul {
+.crescendo-player ol, .crescendo-player ul {
   list-style: none;
 }
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+.crescendo-player ol li, .crescendo-player ul li {
+  list-style: none;
 }
-
-caption, th, td {
-  text-align: left;
-  font-weight: normal;
-  vertical-align: middle;
-}
-
-q, blockquote {
-  quotes: none;
-}
-q:before, q:after, blockquote:before, blockquote:after {
-  content: "";
-  content: none;
-}
-
-a img {
+.crescendo-player a img {
   border: none;
-}
-
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
-  display: block;
 }
 
 @font-face {
@@ -62,51 +31,38 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   font-style: normal;
 }
 
-[data-icon]:before {
-  font-family: "CrescendoIcons";
-  content: attr(data-icon);
-  speak: none;
-}
-
-body {
+.crescendo-player {
   font-family: "Ubuntu", sans-serif;
   font-weight: normal;
   font-size: 22px;
   color: white;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-a {
-  color: inherit;
-  color: inherit;
-}
-
-.crescendo-player {
   height: 150px;
   width: 100%;
   overflow-y: hidden;
 }
-
-.crescendo-cover, .crescendo-content {
+.crescendo-player * {
+  box-sizing: border-box;
+}
+.crescendo-player a {
+  color: inherit;
+  color: inherit;
+  text-decoration: underline;
+}
+@media screen and (max-width: 320px) {
+  .crescendo-player .crescendo-cover {
+    display: none;
+  }
+}
+.crescendo-player .crescendo-cover, .crescendo-player .crescendo-content {
   height: 150px;
 }
-
-.crescendo-cover {
+.crescendo-player .crescendo-cover {
   display: inline;
   float: left;
   background: url("../img/jamendo-150-op0.3.png");
   max-width: 150px;
 }
-
-@media screen and (max-width: 320px) {
-  .crescendo-cover {
-    display: none;
-  }
-}
-.crescendo-content {
+.crescendo-player .crescendo-content {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #32363c), color-stop(100%, #17191e));
   background-image: -webkit-linear-gradient(top, #32363c, #17191e);
   background-image: -moz-linear-gradient(top, #32363c, #17191e);
@@ -115,55 +71,52 @@ a {
   padding: 16px 20px 0 20px;
   overflow: hidden;
 }
-
-.crescendo-title, .crescendo-desc {
+.crescendo-player .crescendo-title, .crescendo-player .crescendo-desc {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.4em;
 }
-
-.crescendo-desc {
+.crescendo-player .crescendo-desc {
   font-size: 15px;
   color: #919191;
 }
-
-.crescendo-controls {
+.crescendo-player .crescendo-controls {
   margin-top: 10px;
 }
-
-.crescendo-buttons {
+.crescendo-player .crescendo-buttons {
   margin-bottom: 5px;
   list-style-type: none;
   font-size: 22px;
   overflow: hidden;
   *zoom: 1;
 }
-.crescendo-buttons li {
+.crescendo-player .crescendo-buttons li {
   float: left;
   opacity: 0.6;
 }
-.crescendo-buttons li:hover {
+.crescendo-player .crescendo-buttons li:hover {
   cursor: pointer;
   opacity: 1;
 }
-.crescendo-buttons li.activated {
+.crescendo-player .crescendo-buttons li.crescendo-btn-activated {
   color: #c6f748;
 }
-
-li.crescendo-btn-repeat {
+.crescendo-player .crescendo-buttons li [data-icon]:before {
+  font-family: "CrescendoIcons";
+  content: attr(data-icon);
+  speak: none;
+}
+.crescendo-player .crescendo-buttons li.crescendo-btn-repeat {
   margin-left: 3px;
 }
-
-li.crescendo-btn-volume {
+.crescendo-player .crescendo-buttons li.crescendo-btn-volume {
   float: right;
 }
-
-.crescendo-progress, .crescendo-cursor {
+.crescendo-player .crescendo-progress, .crescendo-player .crescendo-cursor {
   border-radius: 75px;
 }
-
-.crescendo-progress {
+.crescendo-player .crescendo-progress {
   height: 11px;
   margin-top: 2px;
   background: black;
@@ -172,12 +125,10 @@ li.crescendo-btn-volume {
   box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #0c0c0c 0 1px 4px inset;
   position: relative;
 }
-
-.crescendo-cursor, .crescendo-handle {
+.crescendo-player .crescendo-cursor, .crescendo-player .crescendo-handle {
   position: absolute;
 }
-
-.crescendo-cursor {
+.crescendo-player .crescendo-cursor {
   height: 9px;
   width: 30%;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c6f748), color-stop(100%, #a7bf69));
@@ -189,21 +140,17 @@ li.crescendo-btn-volume {
   top: 1px;
   left: 1px;
 }
-
-.crescendo-handle {
+.crescendo-player .crescendo-handle {
   top: -8px;
   left: 28%;
 }
-
-.crescendo-time {
+.crescendo-player .crescendo-time {
   font-size: 13px;
   margin-top: 5px;
 }
-
-.crescendo-total-time {
+.crescendo-player .crescendo-total-time {
   float: left;
 }
-
-.crescendo-time-remaining {
+.crescendo-player .crescendo-time-remaining {
   float: right;
 }
