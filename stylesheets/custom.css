@@ -25,3 +25,11 @@
 	color: #a5ce39;
 	margin-bottom: 10px;
 }
+
+.crescendo-player {
+	display: block;
+	height: 150px;
+	margin: 30px auto;
+	border-radius: 5px;
+	box-shadow: 0 0 8px black;
+}
