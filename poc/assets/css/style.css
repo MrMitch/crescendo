@@ -87,6 +87,7 @@ a {
 #player {
   height: 150px;
   width: 100%;
+  overflow-y: hidden;
 }
 
 #cover, #content {
@@ -111,7 +112,7 @@ a {
   background-image: -moz-linear-gradient(top, #32363c, #17191e);
   background-image: -o-linear-gradient(top, #32363c, #17191e);
   background-image: linear-gradient(top, #32363c, #17191e);
-  padding: 16px 20px 20px 20px;
+  padding: 16px 20px 0 20px;
   overflow: hidden;
 }
 
