@@ -14,7 +14,7 @@ $progressBarHeight: 11px
 @font-face 
 	font-family: 'CrescendoIcons'
 	src: url('../fonts/CrescendoIcons.eot')
-	src: url('../fonts/CrescendoIcons.eot?#iefix') format('embedded-opentype'),  		url('../fonts/CrescendoIcons.svg#CrescendoIcons') format('svg'), 		url('../fonts/CrescendoIcons.woff') format('woff'), 		url('../fonts/CrescendoIcons.ttf') format('truetype')
+	src: url('../fonts/CrescendoIcons.eot?.crescendo-iefix') format('embedded-opentype'),  		url('../fonts/CrescendoIcons.svg#CrescendoIcons') format('svg'), 		url('../fonts/CrescendoIcons.woff') format('woff'), 		url('../fonts/CrescendoIcons.ttf') format('truetype')
 	font-weight: normal
 	font-style: normal
 
@@ -42,46 +42,46 @@ a
 	&:hover, &:active, &:focus, &:visited, &:link
 	color: inherit
 
-#player
+.crescendo-player
 	height: $coverSize
 	width: 100%
 	overflow-y: hidden
 
 
 //Cover
-#cover, #content
+.crescendo-cover, .crescendo-content
 	height: $coverSize
 
-#cover
+.crescendo-cover
 	+float-left()
 	background: url('../img/jamendo-150-op0.3.png')
 	max-width: $coverSize
 
 @media screen and (max-width: 320px)
-	#cover
+	.crescendo-cover
 		display: none
 
 //Left Side
-#content
+.crescendo-content
 	+background-image(linear-gradient(top, #32363C, #17191E))
 	padding: ($shift - 4) $shift 0 $shift
 	overflow: hidden
 
-#title, #desc
+.crescendo-title, .crescendo-desc
 	overflow: hidden
 	white-space: nowrap
 	text-overflow: ellipsis
 	line-height: 1.4em
 
-#desc
+.crescendo-desc
 	font-size: 15px
 	color: #919191
 
-#controls
+.crescendo-controls
 	margin-top: 10px
 
 //Buttons
-#buttons
+.crescendo-buttons
 	margin-bottom: 5px
 	list-style-type: none
 	font-size: 22px
@@ -98,28 +98,28 @@ a
 		&.activated
 			color:  #C6F748
 
-li#btn-repeat
+li.crescendo-btn-repeat
 	margin-left: 3px
 
-li#btn-volume
+li.crescendo-btn-volume
 	float: right
 
 
 //Progress bar
-#progress, #cursor
+.crescendo-progress, .crescendo-cursor
 	border-radius: $coverSize / 2
 
-#progress
+.crescendo-progress
 	height: $progressBarHeight
 	margin-top: 2px
 	background: black
 	+box-shadow(rgba(255, 255, 255, 0.1) 0 1px 0, #0C0C0C 0 1px 4px inset)
 	position: relative
 
-#cursor, #handle
+.crescendo-cursor, .crescendo-handle
 	position: absolute
 
-#cursor
+.crescendo-cursor
 	height: $progressBarHeight - 2px
 	width: 30%
 	+background-image(linear-gradient(top, #C6F748, #a7bf69))
@@ -127,16 +127,16 @@ li#btn-volume
 	top: 1px
 	left: 1px
 
-#handle
+.crescendo-handle
 	top: -8px
 	left: 28%
 
-#time
+.crescendo-time
 	font-size: 13px
 	margin-top: 5px
 
-#total-time
+.crescendo-total-time
 	float: left
 
-#time-remaining
+.crescendo-time-remaining
 	float: right
