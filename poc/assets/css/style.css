@@ -60,7 +60,7 @@
   display: inline;
   float: left;
   background: url("../img/jamendo-150-op0.3.png");
-  max-width: 150px;
+  width: 150px;
 }
 .crescendo-player .crescendo-content {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #32363c), color-stop(100%, #17191e));
@@ -113,7 +113,7 @@
 .crescendo-player .crescendo-buttons li.crescendo-btn-volume {
   float: right;
 }
-.crescendo-player .crescendo-progress, .crescendo-player .crescendo-cursor {
+.crescendo-player .crescendo-progress, .crescendo-player .ui-slider-range {
   border-radius: 75px;
 }
 .crescendo-player .crescendo-progress {
@@ -125,24 +125,27 @@
   box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #0c0c0c 0 1px 4px inset;
   position: relative;
 }
-.crescendo-player .crescendo-cursor, .crescendo-player .crescendo-handle {
+.crescendo-player .ui-slider-range, .crescendo-player .ui-slider-handle {
   position: absolute;
 }
-.crescendo-player .crescendo-cursor {
+.crescendo-player .ui-slider-range {
+  top: 1px;
+  left: 1px;
   height: 9px;
-  width: 30%;
+  width: 100%;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c6f748), color-stop(100%, #a7bf69));
   background-image: -webkit-linear-gradient(top, #c6f748, #a7bf69);
   background-image: -moz-linear-gradient(top, #c6f748, #a7bf69);
   background-image: -o-linear-gradient(top, #c6f748, #a7bf69);
   background-image: linear-gradient(top, #c6f748, #a7bf69);
   background-color: white;
-  top: 1px;
-  left: 1px;
 }
-.crescendo-player .crescendo-handle {
-  top: -8px;
-  left: 28%;
+.crescendo-player .ui-slider-handle {
+  background: url("../img/handle.png") center center no-repeat;
+  width: 26px;
+  height: 26px;
+  top: -7px;
+  margin-left: -13px;
 }
 .crescendo-player .crescendo-time {
   font-size: 13px;
@@ -153,4 +156,7 @@
 }
 .crescendo-player .crescendo-time-remaining {
   float: right;
+}
+.crescendo-player .crescendo-audio {
+  display: none;
 }

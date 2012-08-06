@@ -18,6 +18,7 @@
 	<!-- crescendo -->
 	<link rel="stylesheet" href="poc/assets/css/style.css" media="screen">
 	<script type="text/javascript" src="poc/assets/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="poc/assets/js/jquery-ui-1.8.22.slider.min.js"></script>
 	<script type="text/javascript" src="poc/assets/js/crescendo.js"></script>
 
 	<title>Crescendo by MrMitch</title>
@@ -68,6 +69,12 @@
 				<h2>VISUAL examples: </h2>
 
 
+				<div id="test-js" class="test-class">
+					<p>This will be replaced</p>
+				</div>
+
+
+				<!--
 				<div class="crescendo-player">
 					<img class="crescendo-cover" src="poc/assets/img/cover-daft-150.jpg" alt="Daft Punk - Discovery">
 
@@ -79,7 +86,7 @@
 								<span class="crescendo-artist">Daft Punk</span> - <span class="crescendo-album">Discovery</span>,
 								<span>on <a class="crescendo-source" href="#">Jamendo</a></span>
 							</p>
-						</div><!-- infos -->
+						</div><!-- infos - ->
 
 						<div class="crescendo-controls">
 							<ul class="crescendo-buttons">
@@ -104,9 +111,9 @@
 								<span class="crescendo-total-time">3:27</span>
 								<span class="crescendo-time-remaining">-1:30</span>
 							</div>
-						</div><!-- controls -->
+						</div><!-- controls - ->
 
-					</div><!-- content -->
+					</div><!-- content - ->
 
 				</div>
 
@@ -122,7 +129,7 @@
 								<span class="crescendo-artist">Family Affair</span> - <span class="crescendo-album">Bridges</span>,
 								<span>on <a class="crescendo-source" href="#">Jamendo</a></span>
 							</p>
-						</div><!-- infos -->
+						</div><!-- infos - ->
 
 						<div class="crescendo-controls">
 							<ul class="crescendo-buttons">
@@ -147,9 +154,9 @@
 								<span class="crescendo-total-time">3:27</span>
 								<span class="crescendo-time-remaining">-1:30</span>
 							</div>
-						</div><!-- controls -->
+						</div><!-- controls - ->
 
-					</div><!-- content -->
+					</div><!-- content - ->
 
 				</div>
 
@@ -165,7 +172,7 @@
 								<span class="crescendo-artist">Archive</span> - <span class="crescendo-album">Controlling Crowds</span>,
 								<span>on <a class="crescendo-source" href="#">Jamendo</a></span>
 							</p>
-						</div><!-- infos -->
+						</div><!-- infos - ->
 
 						<div class="crescendo-controls">
 							<ul class="crescendo-buttons">
@@ -190,11 +197,11 @@
 								<span class="crescendo-total-time">3:27</span>
 								<span class="crescendo-time-remaining">-1:30</span>
 							</div>
-						</div><!-- controls -->
+						</div><!-- controls - ->
 
-					</div><!-- content -->
+					</div><!-- content - ->
 
-				</div>
+				</div> -->
 
 
 			</article>
@@ -222,6 +229,30 @@
 
 
 	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#test-js').crescendo({
+				volume: 50,
+				autoPlay: true,
+				song: {
+					title: 'Factum Par Fictio',
+					artist: 'Revolution Void',
+					album: 'Increase the Dosage',
+					cover: 'http://imgjam.com/albums/s2/2225/covers/1.150.jpg',
+					uri: 'http://www.jamendo.com/fr/track/15656/factum-par-fictio',
+					files: {
+						'mp3': 'http://api.jamendo.com/get2/stream/track/redirect/?id=15656&streamencoding=mp31',
+						'ogg': 'http://api.jamendo.com/get2/stream/track/redirect/?id=15656&streamencoding=ogg2'
+								},
+					source: 'jamendo'
+				}
+			});
+		});
+
+
+	</script>
+
 </div>
 </body>
 </html>
