@@ -2,10 +2,9 @@
  * crescendo
  */
 
-(function ($) {
+(function ($, Math) {
 
-    var template = '<div class="crescendo-player"> \
-        <img class="crescendo-cover" src="" alt=""> \
+    var template = '<img class="crescendo-cover" src="" alt=""> \
         <div class="crescendo-content"> \
             <div class="crescendo-infos"> \
                 <h1 class="crescendo-title"></h1>\
@@ -15,21 +14,31 @@
                 </p>\
             </div>\
             <div class="crescendo-controls">\
-                <ul class="crescendo-buttons">\
-                    <li class="crescendo-btn-play"><div aria-hidden="true" data-icon="%"></div></li>\
-                    <li class="crescendo-btn-stop"><div aria-hidden="true" data-icon="*"></div></li>\
-                    <li class="crescendo-btn-repeat"><div aria-hidden="true" data-icon="\'"></div></li>\
-                    <li class="crescendo-btn-volume"><div aria-hidden="true" data-icon=","></div></li>\
-                </ul>\
+                <ul class="crescendo-buttons"></ul>\
                 <div class="crescendo-progress"></div>\
                 <div class="crescendo-time">\
-                    <span class="crescendo-total-time"></span>\
-                    <span class="crescendo-time-remaining"></span>\
+                    <span class="crescendo-current"></span>\
+                    <span class="crescendo-remaining"></span>\
                 </div>\
             </div>\
         </div>\
-        <audio class="crescendo-audio" controls="controls" preload="auto"></audio>\
-    </div>';
+        <audio class="crescendo-audio" preload="metadata"></audio>';
+
+    var buttonsIcons = {
+        play: '%',
+        pause: '&',
+        stop: '*',
+        loop: '\'',
+        volume: ','
+
+    };
+
+    var buttonsTemplates = {
+        play: '<li class="crescendo-btn-play" aria-hidden="true" data-icon=""></li>',
+        stop: '<li class="crescendo-btn-stop" aria-hidden="true" data-icon=""></li>',
+        loop: '<li class="crescendo-btn-loop" aria-hidden="true" data-icon=""></li>',
+        volume: '<li class="crescendo-btn-volume" aria-hidden="true" data-icon=""></li>'
+    };
 
     $.widget('mrmitch.crescendo',
         {
@@ -37,7 +46,6 @@
             options: {
                 autoPlay: false,
                 volume: 70,
-                //endPoint: 'crescendo.html', // the player template
                 buttons: {
                     play: true,
                     stop: true,
@@ -49,46 +57,64 @@
 
             elements: {
                 audio: null,
+                slider: null,
                 player: null,
                 title: null,
                 artist: null,
                 album: null,
-                source: null
+                source: null,
+                current: null,
+                remaining: null,
+                buttons: {
+                    play: null,
+                    stop: null,
+                    loop: null
+                }
             },
 
             data: {
                 loaded: false,
                 song: null,
                 playing: false,
+                sliding: false,
                 types: {
-                    mp3: 'audio/mp3',
+                    mp3: 'audio/mpeg',
                     ogg: 'audio/ogg',
+                    oga: 'audio/ogg',
+                    flac: 'audio/flac',
                     wav: 'audio/x-wav'
                 }
             },
 
-            _create:function () {
+            _create:function ()
+            {
                 var crescendo = this;
-                var elem = crescendo.element;
-                var player = $(template).addClass(elem.attr('class')).attr('id', elem.id);
+                var elem = crescendo.element.addClass('crescendo-player').html(template);
 
-                crescendo.elements.slider = player.find('.crescendo-progress').slider({
-                    range: 'min',
-                    value: 0,
-                    min: 0,
-                    max: 0,
-                    slide: function(event, ui) {
-                        //$( "#amount" ).val( "$" + ui.value );
+                crescendo.elements.slider = elem.find('.crescendo-progress');
+
+                crescendo.elements.title = elem.find('.crescendo-title');
+                crescendo.elements.cover = elem.find('.crescendo-cover');
+                crescendo.elements.artist = elem.find('.crescendo-artist');
+                crescendo.elements.album = elem.find('.crescendo-album');
+                crescendo.elements.source = elem.find('.crescendo-source');
+                crescendo.elements.audio = elem.find('.crescendo-audio').eq(0);
+                crescendo.elements.player = elem.find('.crescendo-audio').get(0);
+                crescendo.elements.current = elem.find('.crescendo-current');
+                crescendo.elements.remaining = elem.find('.crescendo-remaining');
+
+
+                var buttonsList = elem.find('.crescendo-buttons');
+
+                for(var i in crescendo.options.buttons)
+                {
+                    if(crescendo.options.buttons[i])
+                    {
+                        crescendo.elements.buttons[i] = $(buttonsTemplates[i]).attr('data-icon', buttonsIcons[i]);
+                        buttonsList.append(crescendo.elements.buttons[i]);
                     }
-                });
+                }
 
-                crescendo.elements.title = player.find('.crescendo-title');
-                crescendo.elements.cover = player.find('.crescendo-cover');
-                crescendo.elements.artist = player.find('.crescendo-artist');
-                crescendo.elements.album = player.find('.crescendo-album');
-                crescendo.elements.source = player.find('.crescendo-source');
-                crescendo.elements.audio = player.find('.crescendo-audio').eq(0);
-                crescendo.elements.player = player.find('.crescendo-audio').get(0);
 
                 if(crescendo.options.autoPlay)
                 {
@@ -100,10 +126,8 @@
                     crescendo.load(crescendo.options.song);
                 }
 
-
-                elem.after(player).detach().remove();
-
-                crescendo._bindEvents();
+                crescendo._bindClickEvents();
+                crescendo._bindAudioEvents();
             },
 
 
@@ -112,8 +136,110 @@
 
             },
 
-            _bindEvents:function () {
+            _bindClickEvents:function ()
+            {
+                var crescendo = this;
 
+                if(crescendo.options.buttons.stop)
+                {
+                    this.elements.buttons.stop.on('click.crescendo', function(event){
+                        crescendo.stop();
+                    });
+                }
+
+                if(this.options.buttons.play)
+                {
+                    this.elements.buttons.play.on('click.crescendo', function(event) {
+                        if(crescendo.elements.player.paused)
+                        {
+                            crescendo.play();
+                        }
+                        else
+                        {
+                            crescendo.pause();
+                        }
+                    });
+                }
+
+                if(this.options.buttons.loop)
+                {
+                    this.elements.buttons.loop.on('click', function(event) {
+                        $(this).toggleClass('crescendo-btn-activated');
+                    });
+                }
+            },
+
+            _bindAudioEvents: function()
+            {
+                var crescendo = this;
+
+                crescendo.elements.audio
+                    .on('loadedmetadata', function(event){
+                        var duration = Math.floor(crescendo.elements.player.duration);
+
+                        crescendo.data.song.duration = duration;
+                        crescendo.elements.current.text('0:00');
+                        crescendo.elements.remaining.text('- ' + crescendo._secondsToTimeSTring(duration));
+
+                        crescendo.elements.slider.slider({
+                            range: 'min',
+                            value: 0,
+                            min: 0,
+                            max: duration,
+                            start: function(){
+                                crescendo.data.sliding = true;
+                            },
+                            slide: function(event, ui) {
+                                crescendo._updateTimeInfo(ui.value);
+                            },
+                            stop: function(event, ui){
+                                crescendo.data.sliding = false;
+                                crescendo.seek(ui.value);
+                            }
+                        });
+                    })
+                    .on('timeupdate', function(event) {
+                        var current = Math.floor(crescendo.elements.player.currentTime);
+
+                        if(!crescendo.data.sliding)
+                        {
+                            crescendo._updateTimeInfo(current);
+                            crescendo.elements.slider.slider('value', current);
+                        }
+                    })
+                    .on('play pause',function(event){
+                        crescendo.elements.buttons.play.attr('data-icon',
+                            buttonsIcons[event.type == 'pause' ? 'play' : 'pause']);
+                    })
+                    .on('ended', function(){
+                        if(!crescendo.data.sliding)
+                        {
+                            crescendo._updateTimeInfo(0);
+                            crescendo.elements.slider.slider('value', 0);
+                        }
+                    });
+            },
+
+            /**
+             * Converts an amount of second to a 'minutes:seconds' string.
+             * @param {Number} seconds
+             * @return {String}
+             * @private
+             */
+            _secondsToTimeSTring: function(seconds){
+                seconds = Math.floor(seconds);
+                var m = Math.floor(seconds/60);
+                var s = seconds - 60*m;
+
+                return m + ':' + (s<10 ? ('0' + s) : s);
+            },
+
+            _updateTimeInfo: function(current) {
+                current = Math.floor(current);
+                var remaining = this.data.song.duration - current;
+
+                this.elements.current.text(this._secondsToTimeSTring(current));
+                this.elements.remaining.text('- ' + this._secondsToTimeSTring(remaining));
             },
 
             load: function() {
@@ -132,15 +258,21 @@
                     this._loadFromHost(arguments[0], arguments[1]);
                 }
 
-                if(this.data.loaded && this.options.autoPlay)
+                if(this.data.loaded)
                 {
-                    this.play();
+                    this.elements.slider.slider('option', 'max', this.elements.player.duration);
+
+                    if(this.options.autoPlay && this.elements.player.paused)
+                    {
+                        this.play();
+                    }
                 }
 
             },
+
             _loadSongObject: function(songInfo) {
 
-                var elements = this.elements;
+                var elements = this.elements, canPlay;
 
                 this.data.loaded = false;
 
@@ -157,10 +289,14 @@
                     elements.audio.children('source').remove();
                     for(var i in songInfo.files)
                     {
-                        elements.audio.append($('<source />', {
-                            src: songInfo.files[i],
-                            type: this.data.types[i]
-                        }));
+                        canPlay = elements.player.canPlayType(this.data.types[i]);
+                        if(canPlay == 'maybe' || canPlay == 'probably')
+                        {
+                            elements.audio.append($('<source />', {
+                                src: songInfo.files[i],
+                                type: this.data.types[i]
+                            }));
+                        }
                     }
 
                     this.data.song = songInfo;
@@ -168,30 +304,92 @@
                 }
                 else
                 {
-                    console.log('no audio file to play');
+                    console.error('no audio file to play');
                 }
             },
             _loadFromHost: function(){},
 
-            play: function(){
+            play: function()
+            {
                 this.elements.player.play();
+            },
+
+            pause: function()
+            {
+                this.elements.player.pause();
+            },
+
+            stop: function()
+            {
+                var player = this.elements.player;
+                player.pause();
+                player.currentTime = 0;
+            },
+
+            seek: function(seconds)
+            {
+                var player = this.elements.player;
+                if(!this.data.loaded)
+                {
+                    return false;
+                }
+
+                seconds = (+seconds);
+
+                if(seconds < 0)
+                {
+                    seconds = 0;
+                }
+                else
+                {
+                    if(seconds > player.duration)
+                    {
+                        seconds = player.duration;
+                    }
+                }
+
+                player.currentTime = seconds;
+
+                return true;
+            },
+
+            loop: function(activate){
 
             },
-            pause: function(){
-                this.elements.player.pause();
+            setVolume: function(value)
+            {
+                value = (+value);
+
+                if(value < 0)
+                {
+                    value = 0;
+                }
+                else
+                {
+                    if(value > 100)
+                    {
+                        value = 100;
+                    }
+                }
+
+
+                value = Math.round(value)/100;
+
+                this.elements.player.volume = value;
             },
-            stop: function(){
-                this.elements.player.pause();
-            },
-            seek: function(){},
-            loop: function(activate){},
-            setVolume: function(){},
-            search: function(){},
 
             //Destructor
             destroy:function () {
 
+            },
+
+            getData: function(){
+                return {
+                    options: this.options,
+                    elements: this.elements,
+                    data: this.data
+                };
             }
         }
     );
-})(jQuery);
+})(jQuery, Math);

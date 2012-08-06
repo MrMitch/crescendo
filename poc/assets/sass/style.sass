@@ -90,12 +90,12 @@ $progressBarHeight: 11px
 			&.crescendo-btn-activated
 				color:  #C6F748
 
-			[data-icon]:before
+			&[data-icon]:before
 				font-family: 'CrescendoIcons'
 				content: attr(data-icon)
 				speak: none
 
-		li.crescendo-btn-repeat
+		li.crescendo-btn-loop
 			margin-left: 3px
 
 		li.crescendo-btn-volume
@@ -124,19 +124,29 @@ $progressBarHeight: 11px
 
 	.ui-slider-handle
 		background: url('../img/handle.png') center center no-repeat
-		width: 26px
-		height: 26px
-		top: -7px
-		margin-left: -13px
+		width: 20px
+		height: 20px
+		top: -5px
+		margin-left: -10px
+		border-radius: 12px
+		outline: none
+
+		&:active
+			+box-shadow(rgba(198, 247, 72, 0.5) 0 0 2px 2px)
+
+		@media screen and (-webkit-min-device-pixel-ratio: 2)
+			.ui-slider-handle
+				background: url('../img/handleHD.png') center center no-repeat
+
 
 	.crescendo-time
 		font-size: 13px
 		margin-top: 5px
 
-	.crescendo-total-time
+	.crescendo-current
 		float: left
 
-	.crescendo-time-remaining
+	.crescendo-remaining
 		float: right
 
 	.crescendo-audio
