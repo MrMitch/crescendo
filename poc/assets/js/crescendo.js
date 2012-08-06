@@ -49,6 +49,7 @@
 
             elements: {
                 audio: null,
+                player: null,
                 title: null,
                 artist: null,
                 album: null,
@@ -86,7 +87,8 @@
                 crescendo.elements.artist = player.find('.crescendo-artist');
                 crescendo.elements.album = player.find('.crescendo-album');
                 crescendo.elements.source = player.find('.crescendo-source');
-                crescendo.elements.audio = player.find('.crescendo-audio').get(0);
+                crescendo.elements.audio = player.find('.crescendo-audio').eq(0);
+                crescendo.elements.player = player.find('.crescendo-audio').get(0);
 
                 if(crescendo.options.autoPlay)
                 {
@@ -142,9 +144,6 @@
 
                 this.data.loaded = false;
 
-                console.log(songInfo.files);
-                console.log(songInfo.files.length);
-
                 if(songInfo.files)
                 {
                     elements.title.text(songInfo.title || 'Unknown song');
@@ -175,14 +174,14 @@
             _loadFromHost: function(){},
 
             play: function(){
-                this.elements.audio.play();
+                this.elements.player.play();
 
             },
             pause: function(){
-                this.elements.audio.pause();
+                this.elements.player.pause();
             },
             stop: function(){
-                this.elements.audio.pause();
+                this.elements.player.pause();
             },
             seek: function(){},
             loop: function(activate){},
