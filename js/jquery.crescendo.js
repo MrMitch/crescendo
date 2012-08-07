@@ -46,6 +46,7 @@
             options: {
                 autoPlay: false,
                 volume: 70,
+                width: 390,
                 buttons: {
                     play: true,
                     stop: true,
@@ -103,6 +104,12 @@
                 crescendo.elements.current = elem.find('.crescendo-current');
                 crescendo.elements.remaining = elem.find('.crescendo-remaining');
 
+                if(crescendo.options.width <= 320)
+                {
+                    crescendo.elements.cover.hide();
+                }
+
+                elem.css('width', crescendo.options.width);
 
                 var buttonsList = elem.find('.crescendo-buttons');
 
@@ -260,8 +267,6 @@
 
                 if(this.data.loaded)
                 {
-                    this.elements.slider.slider('option', 'max', this.elements.player.duration);
-
                     if(this.options.autoPlay && this.elements.player.paused)
                     {
                         this.play();
