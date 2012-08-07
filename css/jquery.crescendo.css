@@ -77,6 +77,9 @@
   text-overflow: ellipsis;
   line-height: 1.4em;
 }
+.crescendo-player .crescendo-title {
+  color: white;
+}
 .crescendo-player .crescendo-desc {
   font-size: 15px;
   color: #919191;
