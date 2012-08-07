@@ -46,6 +46,7 @@
             options: {
                 autoPlay: false,
                 volume: 70,
+                width: 390,
                 buttons: {
                     play: true,
                     stop: true,
@@ -88,7 +89,7 @@
 
             _create:function ()
             {
-                var crescendo = this;
+                var crescendo = this, filteredWidth = this._filterWidth(crescendo.options.width);
                 var elem = crescendo.element.addClass('crescendo-player').html(template);
 
                 crescendo.elements.slider = elem.find('.crescendo-progress');
@@ -103,6 +104,12 @@
                 crescendo.elements.current = elem.find('.crescendo-current');
                 crescendo.elements.remaining = elem.find('.crescendo-remaining');
 
+                if(filteredWidth[1] == 'px' && filteredWidth[0] <= 320)
+                {
+                    crescendo.elements.cover.hide();
+                }
+
+                elem.css('width', filteredWidth[0] + filteredWidth[1]);
 
                 var buttonsList = elem.find('.crescendo-buttons');
 
@@ -134,6 +141,30 @@
             // Called each time the widget is called without arguments
             _init:function () {
 
+            },
+
+            _filterWidth: function(width){
+                var unit, matches;
+
+                if(typeof width == 'number'){
+                    unit = 'px';
+                }
+                else
+                {
+                    if(typeof width == 'string')
+                    {
+                        matches = /(\d+(\.\d+)*)?(auto|px|em|pt|%)?/g.exec(width);
+                        width = +matches[1];
+                        unit = (!!width) ? matches[3] || 'px' : '';
+                    }
+                    else
+                    {
+                        width = 320;
+                        unit = 'px';
+                    }
+                }
+
+                return [width, unit];
             },
 
             _bindClickEvents:function ()
@@ -260,8 +291,6 @@
 
                 if(this.data.loaded)
                 {
-                    this.elements.slider.slider('option', 'max', this.elements.player.duration);
-
                     if(this.options.autoPlay && this.elements.player.paused)
                     {
                         this.play();
