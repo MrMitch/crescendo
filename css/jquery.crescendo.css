@@ -53,16 +53,29 @@
     display: none;
   }
 }
-.crescendo-player .crescendo-cover, .crescendo-player .crescendo-content {
+.crescendo-player .crescendo-wait-screen {
+  height: 100%;
+  width: 100%;
+  background: #777777;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #17191e), color-stop(100%, #32363c));
+  background-image: -webkit-linear-gradient(top, #17191e, #32363c);
+  background-image: -moz-linear-gradient(top, #17191e, #32363c);
+  background-image: -o-linear-gradient(top, #17191e, #32363c);
+  background-image: linear-gradient(top, #17191e, #32363c);
+}
+.crescendo-player .crescendo-interface {
+  display: none;
+}
+.crescendo-player .crescendo-interface .crescendo-cover, .crescendo-player .crescendo-interface .crescendo-content {
   height: 150px;
 }
-.crescendo-player .crescendo-cover {
+.crescendo-player .crescendo-interface .crescendo-cover {
   display: inline;
   float: left;
   background: url("../img/crescendo.png");
   width: 150px;
 }
-.crescendo-player .crescendo-content {
+.crescendo-player .crescendo-interface .crescendo-content {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #32363c), color-stop(100%, #17191e));
   background-image: -webkit-linear-gradient(top, #32363c, #17191e);
   background-image: -moz-linear-gradient(top, #32363c, #17191e);
@@ -71,55 +84,55 @@
   padding: 16px 20px 0 20px;
   overflow: hidden;
 }
-.crescendo-player .crescendo-title, .crescendo-player .crescendo-desc {
+.crescendo-player .crescendo-interface .crescendo-title, .crescendo-player .crescendo-interface .crescendo-desc {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.4em;
 }
-.crescendo-player .crescendo-title {
+.crescendo-player .crescendo-interface .crescendo-title {
   color: white;
 }
-.crescendo-player .crescendo-desc {
+.crescendo-player .crescendo-interface .crescendo-desc {
   font-size: 15px;
   color: #919191;
 }
-.crescendo-player .crescendo-controls {
+.crescendo-player .crescendo-interface .crescendo-controls {
   margin-top: 10px;
 }
-.crescendo-player .crescendo-buttons {
+.crescendo-player .crescendo-interface .crescendo-buttons {
   margin-bottom: 5px;
   list-style-type: none;
   font-size: 22px;
   overflow: hidden;
   *zoom: 1;
 }
-.crescendo-player .crescendo-buttons li {
+.crescendo-player .crescendo-interface .crescendo-buttons li {
   float: left;
   opacity: 0.6;
 }
-.crescendo-player .crescendo-buttons li:hover {
+.crescendo-player .crescendo-interface .crescendo-buttons li:hover {
   cursor: pointer;
   opacity: 1;
 }
-.crescendo-player .crescendo-buttons li.crescendo-btn-activated {
+.crescendo-player .crescendo-interface .crescendo-buttons li.crescendo-btn-activated {
   color: #c6f748;
 }
-.crescendo-player .crescendo-buttons li[data-icon]:before {
+.crescendo-player .crescendo-interface .crescendo-buttons li[data-icon]:before {
   font-family: "CrescendoIcons";
   content: attr(data-icon);
   speak: none;
 }
-.crescendo-player .crescendo-buttons li.crescendo-btn-loop {
+.crescendo-player .crescendo-interface .crescendo-buttons li.crescendo-btn-loop {
   margin-left: 3px;
 }
-.crescendo-player .crescendo-buttons li.crescendo-btn-volume {
+.crescendo-player .crescendo-interface .crescendo-buttons li.crescendo-btn-volume {
   float: right;
 }
-.crescendo-player .crescendo-progress, .crescendo-player .ui-slider-range {
+.crescendo-player .crescendo-interface .crescendo-progress, .crescendo-player .crescendo-interface .ui-slider-range {
   border-radius: 75px;
 }
-.crescendo-player .crescendo-progress {
+.crescendo-player .crescendo-interface .crescendo-progress {
   height: 11px;
   margin-top: 2px;
   background: black;
@@ -128,10 +141,10 @@
   box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #0c0c0c 0 1px 4px inset;
   position: relative;
 }
-.crescendo-player .ui-slider-range, .crescendo-player .ui-slider-handle {
+.crescendo-player .crescendo-interface .ui-slider-range, .crescendo-player .crescendo-interface .ui-slider-handle {
   position: absolute;
 }
-.crescendo-player .ui-slider-range {
+.crescendo-player .crescendo-interface .ui-slider-range {
   top: 1px;
   left: 1px;
   height: 9px;
@@ -143,7 +156,7 @@
   background-image: linear-gradient(top, #c6f748, #a7bf69);
   background-color: white;
 }
-.crescendo-player .ui-slider-handle {
+.crescendo-player .crescendo-interface .ui-slider-handle {
   background: url("../img/handle.png") center center no-repeat;
   width: 20px;
   height: 20px;
@@ -152,26 +165,26 @@
   border-radius: 12px;
   outline: none;
 }
-.crescendo-player .ui-slider-handle:active {
+.crescendo-player .crescendo-interface .ui-slider-handle:active {
   -webkit-box-shadow: rgba(198, 247, 72, 0.5) 0 0 2px 2px;
   -moz-box-shadow: rgba(198, 247, 72, 0.5) 0 0 2px 2px;
   box-shadow: rgba(198, 247, 72, 0.5) 0 0 2px 2px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 2) {
-  .crescendo-player .ui-slider-handle .ui-slider-handle {
+  .crescendo-player .crescendo-interface .ui-slider-handle .ui-slider-handle {
     background: url("../img/handleHD.png") center center no-repeat;
   }
 }
-.crescendo-player .crescendo-time {
+.crescendo-player .crescendo-interface .crescendo-time {
   font-size: 13px;
   margin-top: 5px;
 }
-.crescendo-player .crescendo-current {
+.crescendo-player .crescendo-interface .crescendo-current {
   float: left;
 }
-.crescendo-player .crescendo-remaining {
+.crescendo-player .crescendo-interface .crescendo-remaining {
   float: right;
 }
-.crescendo-player .crescendo-audio {
+.crescendo-player .crescendo-interface .crescendo-audio {
   display: none;
 }

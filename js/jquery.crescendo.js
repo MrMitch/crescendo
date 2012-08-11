@@ -3,32 +3,35 @@
  */
 
 (function ($, Math) {
-
-    var template = '<img class="crescendo-cover" src="" alt=""> \
-        <div class="crescendo-content"> \
-            <div class="crescendo-infos"> \
-                <h1 class="crescendo-title"></h1>\
-                <p class="crescendo-desc">\
-                    <span class="crescendo-artist"></span> - <span class="crescendo-album"></span>,\
-                    <span>on <a class="crescendo-source" href="#"></a></span>\
-                </p>\
-            </div>\
-            <div class="crescendo-controls">\
-                <ul class="crescendo-buttons"></ul>\
-                <div class="crescendo-progress"></div>\
-                <div class="crescendo-time">\
-                    <span class="crescendo-current"></span>\
-                    <span class="crescendo-remaining"></span>\
+    var template = '\
+        <div class="crescendo-wait-screen"></div>\
+        <div class="crescendo-interface">\
+            <img class="crescendo-cover" src="" alt=""> \
+            <div class="crescendo-content"> \
+                <div class="crescendo-infos"> \
+                    <h1 class="crescendo-title"></h1>\
+                    <p class="crescendo-desc">\
+                        <span class="crescendo-artist"></span> - <span class="crescendo-album"></span>,\
+                        <span>on <a class="crescendo-source" href="#"></a></span>\
+                    </p>\
+                </div>\
+                <div class="crescendo-controls">\
+                    <ul class="crescendo-buttons"></ul>\
+                    <div class="crescendo-progress"></div>\
+                    <div class="crescendo-time">\
+                        <span class="crescendo-current"></span>\
+                        <span class="crescendo-remaining"></span>\
+                    </div>\
                 </div>\
             </div>\
-        </div>\
-        <audio class="crescendo-audio" preload="metadata"></audio>';
+        </div>';
+
 
     var buttonsIcons = {
         play: '%',
         pause: '&',
         stop: '*',
-        loop: '\'',
+        loop: "'",
         volume: ','
 
     };
@@ -46,6 +49,7 @@
             options: {
                 autoPlay: false,
                 volume: 70,
+                slideSpeed: 500,
                 width: 390,
                 buttons: {
                     play: true,
@@ -56,57 +60,39 @@
                 song: null
             },
 
-            elements: {
-                audio: null,
-                slider: null,
-                player: null,
-                title: null,
-                artist: null,
-                album: null,
-                source: null,
-                current: null,
-                remaining: null,
-                buttons: {
-                    play: null,
-                    stop: null,
-                    loop: null
-                }
-            },
-
-            data: {
-                loaded: false,
-                song: null,
-                playing: false,
-                sliding: false,
-                types: {
-                    mp3: 'audio/mpeg',
-                    ogg: 'audio/ogg',
-                    oga: 'audio/ogg',
-                    flac: 'audio/flac',
-                    wav: 'audio/x-wav'
-                }
-            },
-
             _create:function ()
             {
                 var crescendo = this, filteredWidth = this._filterWidth(crescendo.options.width);
-                var elem = crescendo.element.addClass('crescendo-player').html(template);
+                var elem = crescendo.element.addClass('crescendo-player');
+                elem.html(elem.html() + template);
 
-                crescendo.elements.slider = elem.find('.crescendo-progress');
+                crescendo.elements = {
+                    slider: elem.find('.crescendo-progress'),
+                    audio: $('<audio />', {'class': 'crescendo-audio',preload: 'metadata'}).appendTo(elem.find('.crescendo-interface')),
+                    current: elem.find('.crescendo-current'),
+                    remaining: elem.find('.crescendo-remaining')
+                };
 
-                crescendo.elements.title = elem.find('.crescendo-title');
-                crescendo.elements.cover = elem.find('.crescendo-cover');
-                crescendo.elements.artist = elem.find('.crescendo-artist');
-                crescendo.elements.album = elem.find('.crescendo-album');
-                crescendo.elements.source = elem.find('.crescendo-source');
-                crescendo.elements.audio = elem.find('.crescendo-audio').eq(0);
-                crescendo.elements.player = elem.find('.crescendo-audio').get(0);
-                crescendo.elements.current = elem.find('.crescendo-current');
-                crescendo.elements.remaining = elem.find('.crescendo-remaining');
+                crescendo.elements.player = crescendo.elements.audio.get(0);
+
+                crescendo.data = {
+                    loaded: false,
+                    firstLoad: true,
+                    song: null,
+                    playing: false,
+                    sliding: false,
+                    types: {
+                        mp3: 'audio/mpeg',
+                        ogg: 'audio/ogg',
+                        oga: 'audio/ogg',
+                        flac: 'audio/flac',
+                        wav: 'audio/x-wav'
+                    }
+                };
 
                 if(filteredWidth[1] == 'px' && filteredWidth[0] <= 320)
                 {
-                    crescendo.elements.cover.hide();
+                    elem.find('.crescendo-cover').hide();
                 }
 
                 elem.css('width', filteredWidth[0] + filteredWidth[1]);
@@ -117,11 +103,9 @@
                 {
                     if(crescendo.options.buttons[i])
                     {
-                        crescendo.elements.buttons[i] = $(buttonsTemplates[i]).attr('data-icon', buttonsIcons[i]);
-                        buttonsList.append(crescendo.elements.buttons[i]);
+                        buttonsList.append($(buttonsTemplates[i]).attr('data-icon', buttonsIcons[i]));
                     }
                 }
-
 
                 if(crescendo.options.autoPlay)
                 {
@@ -169,18 +153,18 @@
 
             _bindClickEvents:function ()
             {
-                var crescendo = this;
+                var crescendo = this, elem = crescendo.element;
 
                 if(crescendo.options.buttons.stop)
                 {
-                    this.elements.buttons.stop.on('click.crescendo', function(event){
+                    elem.on('click.crescendo', '.crescendo-btn-stop', function(event){
                         crescendo.stop();
                     });
                 }
 
                 if(this.options.buttons.play)
                 {
-                    this.elements.buttons.play.on('click.crescendo', function(event) {
+                    elem.on('click.crescendo', '.crescendo-btn-play', function(event) {
                         if(crescendo.elements.player.paused)
                         {
                             crescendo.play();
@@ -194,7 +178,7 @@
 
                 if(this.options.buttons.loop)
                 {
-                    this.elements.buttons.loop.on('click', function(event) {
+                    elem.on('click', '.crescendo-btn-loop', function(event) {
                         $(this).toggleClass('crescendo-btn-activated');
                     });
                 }
@@ -206,13 +190,15 @@
 
                 crescendo.elements.audio
                     .on('loadedmetadata', function(event){
-                        var duration = Math.floor(crescendo.elements.player.duration);
+                        var elems = crescendo.elements,
+                            data = crescendo.data,
+                            duration = Math.floor(elems.player.duration);
 
                         crescendo.data.song.duration = duration;
-                        crescendo.elements.current.text('0:00');
-                        crescendo.elements.remaining.text('- ' + crescendo._secondsToTimeSTring(duration));
+                        elems.current.text('0:00');
+                        elems.remaining.text('- ' + crescendo._secondsToTimeSTring(duration));
 
-                        crescendo.elements.slider.slider({
+                        elems.slider.slider({
                             range: 'min',
                             value: 0,
                             min: 0,
@@ -228,18 +214,31 @@
                                 crescendo.seek(ui.value);
                             }
                         });
+
+                        if(data.firstLoad)
+                        {
+                            crescendo.element.find('.crescendo-wait-screen, .crescendo-interface')
+                                .slideToggle(crescendo.options.slideSpeed);
+                            data.firstLoad = false;
+                        }
+                        if(crescendo.options.autoPlay && crescendo.elements.player.paused)
+                        {
+                            this.play();
+                        }
+
                     })
                     .on('timeupdate', function(event) {
-                        var current = Math.floor(crescendo.elements.player.currentTime);
+                        var elems = crescendo.elements,
+                            current = Math.floor(elems.player.currentTime);
 
                         if(!crescendo.data.sliding)
                         {
                             crescendo._updateTimeInfo(current);
-                            crescendo.elements.slider.slider('value', current);
+                            elems.slider.slider('value', current);
                         }
                     })
                     .on('play pause',function(event){
-                        crescendo.elements.buttons.play.attr('data-icon',
+                        crescendo.element.find('.crescendo-btn-play').attr('data-icon',
                             buttonsIcons[event.type == 'pause' ? 'play' : 'pause']);
                     })
                     .on('ended', function(){
@@ -267,13 +266,15 @@
 
             _updateTimeInfo: function(current) {
                 current = Math.floor(current);
-                var remaining = this.data.song.duration - current;
+                var remaining = this.data.song.duration - current, elems = this.elements;
 
-                this.elements.current.text(this._secondsToTimeSTring(current));
-                this.elements.remaining.text('- ' + this._secondsToTimeSTring(remaining));
+                elems.current.text(this._secondsToTimeSTring(current));
+                elems.remaining.text('- ' + this._secondsToTimeSTring(remaining));
             },
 
             load: function() {
+                var crescendo = this,
+                    data = crescendo.data;
 
                 if(arguments.length == 0)
                 {
@@ -288,40 +289,38 @@
                 {
                     this._loadFromHost(arguments[0], arguments[1]);
                 }
-
-                if(this.data.loaded)
-                {
-                    if(this.options.autoPlay && this.elements.player.paused)
-                    {
-                        this.play();
-                    }
-                }
-
             },
 
             _loadSongObject: function(songInfo) {
 
-                var elements = this.elements, canPlay;
+                var elements = this.elements, elem = this.element,
+                    audio, player, canPlay, artist, album;
 
                 this.data.loaded = false;
 
                 if(songInfo.files)
                 {
-                    elements.title.text(songInfo.title || 'Unknown song');
-                    elements.artist.text(songInfo.artist || 'Unknown artist');
-                    elements.album.text(songInfo.album || 'Unknown album');
-                    elements.cover.attr('src', songInfo.cover || '');
-                    elements.cover.attr('alt',  elements.artist.text() + ' - ' + elements.album.text());
-                    elements.source.text(songInfo.source || 'Unknown source');
-                    elements.source.attr('href', songInfo.uri || '#');
+                    artist = elem.find('.crescendo-artist').text(songInfo.artist || 'Unknown artist');
+                    album = elem.find('.crescendo-album').text(songInfo.album || 'Unknown album');
 
-                    elements.audio.children('source').remove();
+                    elem.find('.crescendo-title').text(songInfo.title || 'Unknown song');
+
+                    elem.find('.crescendo-cover')
+                        .attr('src', songInfo.cover || '')
+                        .attr('alt',  artist.text() + ' - ' + album.text());
+
+                    elem.find('.crescendo-source')
+                        .attr('href', songInfo.uri || '#')
+                        .text(songInfo.source || 'Unknown source');
+
+                    audio = elements.audio.children('source').remove().end();
+                    player = elements.player;
                     for(var i in songInfo.files)
                     {
-                        canPlay = elements.player.canPlayType(this.data.types[i]);
+                        canPlay = player.canPlayType(this.data.types[i]);
                         if(canPlay == 'maybe' || canPlay == 'probably')
                         {
-                            elements.audio.append($('<source />', {
+                            audio.append($('<source />', {
                                 src: songInfo.files[i],
                                 type: this.data.types[i]
                             }));
@@ -340,7 +339,14 @@
 
             play: function()
             {
-                this.elements.player.play();
+                var player = this.elements.player
+
+                if(player.preload != 'auto')
+                {
+                    player.preload = 'auto';
+                }
+
+                player.play();
             },
 
             pause: function()
